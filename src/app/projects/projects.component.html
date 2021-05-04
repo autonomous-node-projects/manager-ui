@@ -1,2 +1,5 @@
-<p>Projects arr:</p>
-<p>{{project.name}}</p>
+<h1 class="is-size-2">Projects</h1>
+
+<div *ngFor="let project of projectsArray">
+  <h2 class="is-size-3">{{project.name}}</h2>
+</div>

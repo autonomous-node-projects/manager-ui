@@ -7,14 +7,22 @@ const methodsDict = {
 
 export type MethodsType = keyof typeof methodsDict
 
-export const MethodsArray = Object.keys(methodsDict) as MethodsType[]
+type HTTPMethods = MethodsType;
+
+export type RequestConfig = {
+  endpoint: string,
+  method: HTTPMethods,
+  headers?: object,
+  data?: object,
+  timeout?: number,
+  debug?: boolean
+}
 
 export interface DataObject {
   [key: string]: any;
 }
 
 export type Request = {
-  _id: number;
   endpoint: string;
   method: MethodsType;
   headers?: DataObject;

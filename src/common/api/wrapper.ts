@@ -1,128 +1,107 @@
 import Cookies from 'universal-cookie'
-import { MethodsType, DataObject } from '../interfaces/request.interface'
+import { RequestConfig, DataObject } from '../interfaces/request.interface'
 
 const API_ENDPOINT = 'http://localhost:3000/'
+
+const binaryContentTypesToBeSaved = [
+  'image/png', 'image/jpeg', 'image/jpg',
+];
 
 const getBearerToken = async () => {
   try {
     const cookies = new Cookies()
     const sessionToken = cookies.get('authToken')
     if (sessionToken !== null && sessionToken !== undefined) {
-      return { Authorization: 'Bearer ' + sessionToken }
+      return 'Bearer ' + sessionToken
     } else {
-      return {}
+      return ""
     }
   } catch (error) {
-    return {}
+    return ""
   }
 }
 
-interface HTTPFunctions {
-  endpoint: string;
-  data?: DataObject | undefined;
-  contentType?: 'application/json';
-}
-
-type HTTPMethods = MethodsType;
-
-export interface HTTPResponse {
-  data: DataObject;
-  status: number;
-}
-
-const parseData = async (response: any, headers: DataObject) => {
+const parseData = async (response: any, headers: Headers, debug = false) => {
+  if (debug) {
+    console.warn('Trying to parse data');
+  }
   const responseBlob = response.clone()
-  const responseText = await response.text()
-  try {
-    const data = JSON.parse(responseText)
-    return data
-  } catch (error) {
-    console.warn('Cant parse response body to json')
-    if (headers['content-type'] === 'image/png') {
-      const blob = await responseBlob.blob()
-      const data = URL.createObjectURL(blob)
-      return data
-    } else {
-      return responseText
+  const contentType = await headers.get('Content-Type');
+  if(contentType){
+    if (contentType.includes('json')) {
+      const rawData = await response.json();
+      return (rawData);
+    } if (binaryContentTypesToBeSaved.find((currType) => contentType.includes(currType))) {
+        const blob = await responseBlob.blob()
+        const data = URL.createObjectURL(blob)
+        return data
     }
   }
+  return response.text();
 }
 
-const fetchMethod = (endpoint: HTTPFunctions['endpoint'], fetchConfig: DataObject, timeout = 5000) => {
+const fetchMethod = async (url: string, initialFetchConfig: DataObject, timeout = 5000, debug = false) => {
   const controller = new AbortController()
   const signal = controller.signal
-  fetchConfig.signal = signal
-  setTimeout(() => {
-    controller.abort()
-  }, timeout)
-  const result = fetch(endpoint, fetchConfig)
-    .then((response) => {
-      console.log(response)
-      if (response.ok) {
-        return response
-      } else {
-        return response
-      }
-    })
-    .then(async (response) => {
-      const responseJson: DataObject = {}
-      responseJson.status = response.status
-      responseJson.statusText = response.statusText
-      responseJson.headers = Object.fromEntries(response.headers.entries())
-      if (response.body !== null && response.body !== undefined) {
-        responseJson.data = await parseData(response, responseJson.headers)
-      }
-      return responseJson
-    }
-    )
-    .catch((err) => {
-      console.error('error on fetch - ', err)
-      const res = {
-        status: 503,
-        statusText: 'Service Unavailable'
-      }
-      return res
-    })
-  return result
+  const fetchConfig = { ...initialFetchConfig, signal };
+
+  const abortTimeout = setTimeout(() => {
+    controller.abort();
+  }, timeout);
+
+  const response = await fetch(url, fetchConfig);
+
+  if (!response.ok) {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+  const responseObject = {
+    status: response.status,
+    statusText: response.statusText,
+    // headers: JSON.stringify(response.headers),
+    data: await parseData(response, response.headers, debug),
+  };
+
+  clearTimeout(abortTimeout);
+  return responseObject;
 }
 
-const SendHTTPrequest = async (
-  endpoint: HTTPFunctions['endpoint'],
-  method: HTTPMethods,
-  contentType: HTTPFunctions['contentType'] = 'application/json',
-  data: HTTPFunctions['data'] = undefined,
-  // Predefined data
-  predefinedHeaders?: DataObject,
-  predefinedUrl?: string,
-  timeout?: number) => {
-  let url
-  if (predefinedUrl) {
-    url = predefinedUrl
-  } else {
-    url = API_ENDPOINT + endpoint
-  }
+/**
+     * Send an HTTP Request
+     * @param {Object} requestConfig - Request configuration which will be send.
+     * @param {string} requestConfig.endpoint to make http request.
+     * @param {string} requestConfig.method Http request method.
+     * @param {object} requestConfig.headers Http request headers.
+     * @param {object} requestConfig.data Http request data.
+     * @param {number} requestConfig.timeout Http request timeout in miliseconds.
+     * @param {string} requestConfig.dataDirectory If request will return binary file set where
+     * file should be saved.
+     * @param {number} requestConfig.debug Turns on debug mode - set to 'True'.
+     * @returns {Object} An {status, statusText, headers, data}
+     * containing status and data from response.
+  */
+const SendHTTPrequest = async (requestConfig: RequestConfig) => {
+  // Headers settings
+  const url = API_ENDPOINT + requestConfig.endpoint
 
-  let allHeaders: AnyObject
-  if (predefinedHeaders) {
-    allHeaders = predefinedHeaders
-  } else {
-    allHeaders = await getBearerToken()
-    allHeaders['Content-Type'] = contentType
+  const allHeaders = {
+    ...requestConfig.headers,
+    'Authorization': await getBearerToken()
   }
 
   const fetchConfig: any = {}
   fetchConfig.headers = allHeaders
-  fetchConfig.method = method
-  if (method !== 'GET' && data !== undefined) {
-    fetchConfig.body = JSON.stringify(data)
+  fetchConfig.method = requestConfig.method
+
+  if (typeof (requestConfig.data) === 'object') {
+    fetchConfig.body = JSON.stringify(requestConfig.data)
   }
 
   try {
-    const result = await fetchMethod(url, fetchConfig, timeout)
-    return result
+    const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout)
+    return responseObject
   } catch (error) {
     return error
   }
 }
 
-export default SendHTTPrequest
+export  { SendHTTPrequest, RequestConfig }
