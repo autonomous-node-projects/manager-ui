@@ -49,9 +49,10 @@ const fetchMethod = async (url: string, initialFetchConfig: DataObject, timeout 
     controller.abort();
   }, timeout);
 
+  debug && console.warn(fetchConfig)
   const response = await fetch(url, fetchConfig);
 
-  if (!response.ok) {
+  if (!response.ok && debug) {
     throw new Error(`${response.status}: ${response.statusText}`);
   }
   const responseObject = {
@@ -62,6 +63,7 @@ const fetchMethod = async (url: string, initialFetchConfig: DataObject, timeout 
   };
 
   clearTimeout(abortTimeout);
+  debug && console.warn(responseObject)
   return responseObject;
 }
 
@@ -91,10 +93,7 @@ const SendHTTPrequest = async (requestConfig: RequestConfig) => {
   const fetchConfig: any = {}
   fetchConfig.headers = allHeaders
   fetchConfig.method = requestConfig.method
-
-  if (typeof (requestConfig.data) === 'object') {
-    fetchConfig.body = JSON.stringify(requestConfig.data)
-  }
+  fetchConfig.body = requestConfig.data
 
   try {
     const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout)

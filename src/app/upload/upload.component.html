@@ -1,0 +1,41 @@
+<div class="modal" [ngClass]="{'is-active': displayModal}">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+      <header class="modal-card-head has-background-grey-darker">
+        <p class="modal-card-title has-text-white-ter">Add node project</p>
+        <button (click)="displayModal = !displayModal" class="delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body has-background-grey-dark">
+        <p *ngIf="uploadForm.invalid" class="help is-danger">
+          Project tar archive is required
+        </p>
+        <div class="field file">
+          <label class="file-label">
+            <input class="file-input is-rounded" type="file" name="archive" (change)="uploadFile($event)" required>
+            <span class="file-cta">
+              <span class="file-label">
+                <ng-container *ngIf="filename.length > 0; else elseTemplate">
+                  {{ filename }}
+                </ng-container>
+                <ng-template #elseTemplate>
+                  Tar archive of Node Projects
+                </ng-template>
+              </span>
+            </span>
+          </label>
+        </div>
+        <div class="field">
+          <label class="label has-text-white-ter">Data output directory</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="data/output" name="dataDirectory">
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot has-background-grey-darker">
+        <button type="submit" [disabled]="!uploadForm.valid" class="button is-success" [ngClass]="{'is-loading': submitted}">Add</button>
+        <button (click)="displayModal = !displayModal" class="button">Cancel</button>
+      </footer>
+    </form>
+  </div>
+</div>
