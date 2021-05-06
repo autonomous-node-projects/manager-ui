@@ -20,8 +20,17 @@ export class ProjectsComponent implements OnInit {
       endpoint: 'projects/'
     }
     const result = await SendHTTPrequest(requestConfig)
+    console.log(result)
     if(result.status === 200){
-      this.projectsArray = result.data.data
+      // Smooth add to array
+      result.data.data.forEach((element: Project, index:number)=>{
+        // Check if object is already in array
+        if(!this.projectsArray.find(inArrElement => inArrElement._id===element._id)){
+          setTimeout(()=>{
+            this.projectsArray.push(element)
+            }, 250*index)
+        }
+      })
     }
   }
 
@@ -29,6 +38,9 @@ export class ProjectsComponent implements OnInit {
     setTimeout(()=>{
       this.getProjectsArray()
     }, 700)
-  }
 
+    setInterval(()=>{
+      this.getProjectsArray()
+    }, 1000*60)
+  }
 }

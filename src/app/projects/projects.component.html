@@ -9,11 +9,16 @@
   </div>
 </div>
 <ng-container *ngIf="projectsArray.length > 0; else elseTemplate">
-  <div *ngFor="let project of projectsArray">
-    <div class="box mt-2 has-background-black-ter has-text-success">
-      <div class="columns is-mobile">
-        <div class="column">
-          <h2 class="is-size-4">{{project.name}}</h2>
+  <div class="projects">
+    <div *ngFor="let project of projectsArray">
+      <div class="box project mt-2 has-background-black-ter has-text-success">
+        <div class="columns">
+          <div class="column">
+            <h2 class="is-size-4">
+                {{project.name.substring(0, 15)}}
+                {{project.name.length>15 && '...'}}
+              </h2>
+          </div>
         </div>
       </div>
     </div>
@@ -23,4 +28,4 @@
   <progress class="progress is-danger" max="10"></progress>
 </ng-template>
 
-<app-upload [displayModal]="displayUploadModal"></app-upload>
+<app-upload [displayModal]="displayUploadModal" (getProjectsArray)="getProjectsArray()"></app-upload>

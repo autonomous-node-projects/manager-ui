@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { SendHTTPrequest } from 'src/common/api/wrapper';
@@ -24,6 +24,7 @@ export class UploadComponent implements OnInit {
   }
 
   @Input() displayModal: boolean = false;
+  @Output("getProjectsArray") getProjectsArray = new EventEmitter();
 
   filename: string = '';
   submitted: boolean = false;
@@ -68,17 +69,19 @@ export class UploadComponent implements OnInit {
     })
 
     let errorOccurred = false
-      if (response.status > 200){
+      if (response.status > 200 && response.status < 300){
         this.sharedService.sendOpenNotificationEvent({
           message: `${response.statusText} - ${response.data.details}: ${response.data.data}`,
            type: 'SUCCESS'
         });
+        this.getProjectsArray.emit()
       }
-      if (response.status > 400){
+      if (response.status > 300){
         this.sharedService.sendOpenNotificationEvent({
           message: `${response.statusText} - ${response.data.details}`,
           type: 'ERROR'
         });
+        this.getProjectsArray.emit()
       }
 
     this.uploadForm.reset()
