@@ -6,7 +6,7 @@ import { NotificationParameters } from './notifications.interface'
   providedIn: 'root'
 })
 
-export class SharedService {
+export class NotificationsSharedService {
   private subject = new Subject<any>();
 
   sendOpenNotificationEvent(params: NotificationParameters) {

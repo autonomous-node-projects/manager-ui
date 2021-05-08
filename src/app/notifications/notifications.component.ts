@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationsType, NotificationParameters } from './notifications.interface';
-import { SharedService } from './sharedService';
+import { NotificationsSharedService } from './notifications.sharedService';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,9 +14,9 @@ import { Subscription } from 'rxjs';
 export class NotificationsComponent implements OnInit {
   clickEventsubscription: Subscription
     constructor(
-    private sharedService:SharedService,
+    private notifications:NotificationsSharedService,
     ) {
-      this.clickEventsubscription = this.sharedService.getOpenNotificationEvent().subscribe((params)=>{
+      this.clickEventsubscription = this.notifications.getOpenNotificationEvent().subscribe((params)=>{
         this.runNotification(params)
     })
     }

@@ -1,31 +1,37 @@
 <div class="columns">
-  <div class="column">
-    <h2 class="is-size-2">Projects</h2>
+  <!-- LEFT -->
+  <div class="column is-2-desktop">
+    <app-projects-menu [projectsArray]="projectsArray" [errorLoadingProjectsArray]="errorLoadingProjectsArray" (selectProjectId)="selectProjectId($event)" class="is-valign">
+    </app-projects-menu>
   </div>
-  <div class="column is-flex is-justify-content-flex-end is-align-items-center">
-    <button (click)="displayUploadModal = !displayUploadModal" class="button is-dark has-background-black-ter">
-      Add new Project
-    </button>
-  </div>
-</div>
-<ng-container *ngIf="projectsArray.length > 0; else elseTemplate">
-  <div class="projects">
-    <div *ngFor="let project of projectsArray">
-      <div class="box project mt-2 has-background-black-ter has-text-success">
-        <div class="columns">
-          <div class="column">
-            <h2 class="is-size-4">
-                {{project.name.substring(0, 15)}}
-                {{project.name.length>15 && '...'}}
-              </h2>
-          </div>
-        </div>
+
+  <!-- RIGHT -->
+  <div class="column is-10-desktop">
+    <!-- TOP  -->
+    <div class="columns">
+      <div class="column is-2-desktop">
+        <h2 class="is-size-2">Projects</h2>
+      </div>
+      <div class="column is-10-desktop is-flex is-justify-content-flex-end is-align-items-center">
+        <button (click)="displayUploadModal = !displayUploadModal" class="button is-dark has-background-black-ter has-text-primary">
+          Add new Project
+        </button>
+      </div>
+    </div>
+    <!-- BOTTOM -->
+    <div class="columns">
+      <div class="column is-12-desktop">
+        <ng-container *ngIf="!selectedProject; else selectedProjectTemplate">
+          <ng-container *ngIf="projectsArray.length > 0">
+            <h2 class="has-text-info has-text-centered">Select project and details will appear here </h2>
+          </ng-container>
+        </ng-container>
+        <ng-template #selectedProjectTemplate>
+          <app-project-details [selectedProject]=selectedProject></app-project-details>
+        </ng-template>
       </div>
     </div>
   </div>
-</ng-container>
-<ng-template #elseTemplate>
-  <progress class="progress is-danger" max="10"></progress>
-</ng-template>
+</div>
 
 <app-upload [displayModal]="displayUploadModal" (getProjectsArray)="getProjectsArray()"></app-upload>

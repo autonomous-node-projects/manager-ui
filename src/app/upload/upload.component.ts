@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { SendHTTPrequest } from 'src/common/api/wrapper';
-import { SharedService } from '../notifications/sharedService';
+import { NotificationsSharedService } from '../notifications/notifications.sharedService';
 
 @Component({
   selector: 'app-upload',
@@ -15,7 +15,7 @@ export class UploadComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder,
-    private sharedService:SharedService
+    private notifications:NotificationsSharedService
   ) {
     this.uploadForm = this.fb.group({
       archive: new FormControl(null, Validators.required),
@@ -68,20 +68,25 @@ export class UploadComponent implements OnInit {
       data: formData
     })
 
-    let errorOccurred = false
-      if (response.status > 200 && response.status < 300){
-        this.sharedService.sendOpenNotificationEvent({
+      if (response.status >= 200 && response.status < 300){
+        this.notifications.sendOpenNotificationEvent({
           message: `${response.statusText} - ${response.data.details}: ${response.data.data}`,
            type: 'SUCCESS'
         });
         this.getProjectsArray.emit()
       }
-      if (response.status > 300){
-        this.sharedService.sendOpenNotificationEvent({
+      if (response.status >= 300 && response.status < 400){
+        this.notifications.sendOpenNotificationEvent({
           message: `${response.statusText} - ${response.data.details}`,
           type: 'ERROR'
         });
         this.getProjectsArray.emit()
+      }
+      if (response.status >= 500){
+        this.notifications.sendOpenNotificationEvent({
+          message: `${response.status} - ${response.statusText} - Cant upload data to server`,
+          type: 'ERROR'
+        });
       }
 
     this.uploadForm.reset()

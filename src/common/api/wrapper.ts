@@ -4,7 +4,7 @@ import { RequestConfig, DataObject } from '../interfaces/request.interface'
 const API_ENDPOINT = 'http://localhost:3000/'
 
 const binaryContentTypesToBeSaved = [
-  'image/png', 'image/jpeg', 'image/jpg',
+  'image/png', 'image/jpeg', 'image/jpg', 'application/x-tar'
 ];
 
 const getBearerToken = async () => {
@@ -50,21 +50,26 @@ const fetchMethod = async (url: string, initialFetchConfig: DataObject, timeout 
   }, timeout);
 
   debug && console.warn(fetchConfig)
-  const response = await fetch(url, fetchConfig);
 
-  if (!response.ok && debug) {
-    throw new Error(`${response.status}: ${response.statusText}`);
+  let response;
+  try {
+    response = await fetch(url, fetchConfig);
+    if (!response.ok && debug) {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
+    const responseObject = {
+      status: response.status,
+      statusText: response.statusText,
+      // headers: JSON.stringify(response.headers),
+      data: await parseData(response, response.headers, debug),
+    };
+
+    clearTimeout(abortTimeout);
+    debug && console.warn(responseObject)
+    return responseObject;
+  } catch (error) {
+    return {status: 503, statusText: "Service Unavailable"}
   }
-  const responseObject = {
-    status: response.status,
-    statusText: response.statusText,
-    // headers: JSON.stringify(response.headers),
-    data: await parseData(response, response.headers, debug),
-  };
-
-  clearTimeout(abortTimeout);
-  debug && console.warn(responseObject)
-  return responseObject;
 }
 
 /**

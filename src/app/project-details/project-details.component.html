@@ -1,0 +1,32 @@
+<h1 class="is-size-3 has-text-weight-bold">{{ selectedProject.name }}</h1>
+<small>ID: {{ selectedProject._id }}</small>
+
+<h2 class="is-size-4 mt-5">Scripts</h2>
+<ng-container *ngIf="selectedProject.scripts.length === 0; else hasScripts">
+  <p class="has-text-warning">No scripts</p>
+</ng-container>
+<ng-template #hasScripts>
+  <ul class="has-text-left">
+    <li *ngFor="let script of selectedProject.scripts | keyvalue" class="mt-3">
+      <p><span class="has-text-info">{{script.key}}</span>: <code>{{script.value}}</code></p>
+    </li>
+  </ul>
+</ng-template>
+
+<h2 class="is-size-4 mt-5">Schedules</h2>
+<ng-container *ngIf="selectedProject.schedules.length === 0; else hasSchedules">
+  <p class="has-text-warning">No schedules</p>
+</ng-container>
+<ng-template #hasSchedules>
+  <ul>
+    <li *ngFor="let schedule of selectedProject.schedules">
+      {{schedule.scriptName}}
+    </li>
+  </ul>
+</ng-template>
+<h2 class="is-size-4 mt-5">Output Data</h2>
+<button
+class="button is-dark has-background-black-ter has-text-primary mt-3"
+(click)="downloadData()">
+Download Output data
+</button>
