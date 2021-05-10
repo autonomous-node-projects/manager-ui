@@ -15,7 +15,6 @@ export class ProjectsComponent implements OnInit {
   errorLoadingProjectsArray = false;
   projectsArray: Array<Project> = [];
   selectedProject?: Project;
-  displayUploadModal = false;
 
   constructor(
     private notifications: NotificationsSharedService,

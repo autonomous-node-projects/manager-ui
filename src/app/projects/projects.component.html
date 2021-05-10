@@ -13,9 +13,7 @@
         <h2 class="is-size-2">Projects</h2>
       </div>
       <div class="column is-10-desktop is-flex is-justify-content-flex-end is-align-items-center">
-        <button (click)="displayUploadModal = !displayUploadModal" class="button is-dark has-background-black-ter has-text-primary">
-          Add new Project
-        </button>
+        <app-upload></app-upload>
       </div>
     </div>
     <!-- BOTTOM -->
@@ -34,4 +32,3 @@
   </div>
 </div>
 
-<app-upload [displayModal]="displayUploadModal"></app-upload>

@@ -20,16 +20,16 @@ export class AddScheduleComponent {
     private getProjects: ProjectsSharedService
   ) {
     this.scheduleForm = this.fb.group({
-      scriptName: new FormControl(Validators.required),
+      scriptName: new FormControl('',Validators.required),
       every: new FormGroup({
-        value: new FormControl(Validators.min(0), Validators.max(60)),
-        timeType: new FormControl(Validators.required)
+        value: new FormControl(1, Validators.min(1)),
+        timeType: new FormControl('', Validators.required)
       }),
-      exitAfter: new FormControl()
+      exitAfter: new FormControl('')
     });
   }
 
-  @Input() displayModal = false;
+  @Input() displayModal: boolean = false;
   @Input() selectedProject: any;
   @Output() getProjectsArray = new EventEmitter();
 
@@ -72,13 +72,16 @@ export class AddScheduleComponent {
     const response = await SendHTTPrequest(requestConfig)
     if (response.status >= 200 && response.status < 300){
       this.notifications.sendOpenNotificationEvent({
-        message: `${response.statusText} - ${response.data.details}: ${response.data.data}`,
+        message: `${response.statusText} - ${response.data.details}`,
          type: 'SUCCESS'
       });
       this.getProjects.sendPullProjectsEvent()
       this.displayModal = false;
+    } else {
+      this.notifications.sendOpenNotificationEvent({
+        message: `${response.status}: ${response.statusText} - Couldnt add schedule`,
+         type: 'ERROR'
+      });
     }
-    console.log(response)
   }
-
 }

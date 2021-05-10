@@ -34,18 +34,9 @@
       </tr>
     </tbody>
   </table>
-    <!-- <li *ngFor="let schedule of selectedProject.schedules">
-      <small>{{schedule._id}}</small> <br/>
-      {{schedule.scriptName}} <br/>
-      Script runs every: {{schedule.every.value}} {{schedule.every.timeType}} <br/>
-      <button class="button is-dark has-background-black-ter has-text-danger" (click)="deleteSchedule(schedule._id)">Delete</button>
-    </li> -->
 </ng-template>
-<button class="button is-dark has-background-black-ter has-text-primary mt-3" (click)="displayScheduleModal = !displayScheduleModal">
-  Add schedule
-</button>
+<app-add-schedule [selectedProject]="selectedProject"></app-add-schedule>
 <h2 class="is-size-4 mt-5">Output Data</h2>
 <button class="button is-dark has-background-black-ter has-text-primary mt-3" (click)="downloadData()">
   Download Output data
 </button>
-<app-add-schedule [displayModal]="displayScheduleModal" [selectedProject]="selectedProject"></app-add-schedule>

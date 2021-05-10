@@ -19,7 +19,6 @@ export class ProjectDetailsComponent {
 
   @Input() selectedProject: any;
 
-  displayScheduleModal: boolean = false;
   tableHeaders = [
     {title: "Position", shortcut: "Pos."},
     {title: "Script Name", shortcut: "Script"},
@@ -61,6 +60,11 @@ export class ProjectDetailsComponent {
     const response = await SendHTTPrequest(requestConfig);
     if(response.status === 200){
       this.selectedProject.schedules = this.selectedProject.schedules.filter((schedule: Schedule)=>{return schedule._id !== ScheduleId})
+      this.notifications.sendOpenNotificationEvent({
+        message: `${response.status}: ${response.statusText} - Schedule with ID ${ScheduleId} correctly deleted`,
+        type: "SUCCESS",
+        timeout: 2000
+      })
     }
   }
 
