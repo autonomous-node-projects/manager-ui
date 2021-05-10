@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NotificationsType, NotificationParameters } from './notifications.interface';
-import { SharedService } from './sharedService';
+import { NotificationsSharedService } from './notifications.sharedService';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,36 +11,33 @@ import { Subscription } from 'rxjs';
 
 
 
-export class NotificationsComponent implements OnInit {
-  clickEventsubscription: Subscription
+export class NotificationsComponent {
+  clickEventsubscription: Subscription;
     constructor(
-    private sharedService:SharedService,
+    private notifications: NotificationsSharedService,
     ) {
-      this.clickEventsubscription = this.sharedService.getOpenNotificationEvent().subscribe((params)=>{
-        this.runNotification(params)
-    })
+      this.clickEventsubscription = this.notifications.getOpenNotificationEvent().subscribe((params) => {
+        this.runNotification(params);
+    });
     }
 
-  displayNotification: boolean = false
-  notificationType: NotificationsType = 'SUCCESS'
-  notificationMessage: string = ''
+  displayNotification = false;
+  notificationType: NotificationsType = 'SUCCESS';
+  notificationMessage = '';
 
   closeNotification(){
-    this.displayNotification = false
+    this.displayNotification = false;
   }
 
   runNotification(params: NotificationParameters){
-    this.notificationMessage = params.message
-    this.notificationType = params.type
-    this.displayNotification = true
+    this.notificationMessage = params.message;
+    this.notificationType = params.type;
+    this.displayNotification = true;
 
 
-    setTimeout(()=>{
-      this.displayNotification = false
-    }, !params.timeout ? 5000 : params.timeout)
-  }
-
-  ngOnInit(): void {
+    setTimeout(() => {
+      this.displayNotification = false;
+    }, !params.timeout ? 5000 : params.timeout);
   }
 
 }

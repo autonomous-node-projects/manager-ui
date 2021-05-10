@@ -1,3 +1,6 @@
+<button (click)="displayModal = true" class="button is-dark has-background-black-ter has-text-primary">
+  Add new Project
+</button>
 <div class="modal" [ngClass]="{'is-active': displayModal}">
   <div class="modal-background"></div>
   <div class="modal-card">
@@ -19,7 +22,7 @@
                   {{ filename }}
                 </ng-container>
                 <ng-template #elseTemplate>
-                  Tar archive of Node Projects
+                  Tar archive of Node Project
                 </ng-template>
               </span>
             </span>

@@ -1,7 +1,27 @@
+nav {
+  animation: navAnimOpen 0.2s ease-in-out;
+}
+
+@keyframes navAnimOpen {
+  0% {
+    display: none;
+    opacity: 0;
+    max-height: 0;
+  }
+  1% {
+    display: block;
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    max-height: 396px;
+  }
+}
+
 .container {
   min-height: 85vh;
 }
 
-footer{
+footer {
   height: 15vh;
 }
