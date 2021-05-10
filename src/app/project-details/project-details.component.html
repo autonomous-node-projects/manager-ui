@@ -18,15 +18,34 @@
   <p class="has-text-warning">No schedules</p>
 </ng-container>
 <ng-template #hasSchedules>
-  <ul>
-    <li *ngFor="let schedule of selectedProject.schedules">
-      {{schedule.scriptName}}
-    </li>
-  </ul>
+  <table class="table has-background-grey-darker has-text-light">
+    <thead>
+      <tr>
+        <th *ngFor="let header of tableHeaders" class="has-text-light"><abbr title="{{header.title}}">{{header.shortcut}}</abbr></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let schedule of selectedProject.schedules; let i=index;">
+        <th class="has-text-light">{{i}}</th>
+        <td>{{schedule.scriptName}}</td>
+        <td>{{schedule._id}}</td>
+        <td>Script runs every: {{schedule.every.value}} {{schedule.every.timeType}}</td>
+        <td><button class="button is-dark has-background-black-ter has-text-danger" (click)="deleteSchedule(schedule._id)">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+    <!-- <li *ngFor="let schedule of selectedProject.schedules">
+      <small>{{schedule._id}}</small> <br/>
+      {{schedule.scriptName}} <br/>
+      Script runs every: {{schedule.every.value}} {{schedule.every.timeType}} <br/>
+      <button class="button is-dark has-background-black-ter has-text-danger" (click)="deleteSchedule(schedule._id)">Delete</button>
+    </li> -->
 </ng-template>
-<h2 class="is-size-4 mt-5">Output Data</h2>
-<button
-class="button is-dark has-background-black-ter has-text-primary mt-3"
-(click)="downloadData()">
-Download Output data
+<button class="button is-dark has-background-black-ter has-text-primary mt-3" (click)="displayScheduleModal = !displayScheduleModal">
+  Add schedule
 </button>
+<h2 class="is-size-4 mt-5">Output Data</h2>
+<button class="button is-dark has-background-black-ter has-text-primary mt-3" (click)="downloadData()">
+  Download Output data
+</button>
+<app-add-schedule [displayModal]="displayScheduleModal" [selectedProject]="selectedProject"></app-add-schedule>

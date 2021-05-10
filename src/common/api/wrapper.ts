@@ -1,7 +1,7 @@
-import Cookies from 'universal-cookie'
-import { RequestConfig, DataObject } from '../interfaces/request.interface'
+import Cookies from 'universal-cookie';
+import { RequestConfig, DataObject } from '../interfaces/request.interface';
 
-const API_ENDPOINT = 'http://localhost:3000/'
+const API_ENDPOINT = 'http://localhost:3000/';
 
 const binaryContentTypesToBeSaved = [
   'image/png', 'image/jpeg', 'image/jpg', 'application/x-tar'
@@ -9,47 +9,47 @@ const binaryContentTypesToBeSaved = [
 
 const getBearerToken = async () => {
   try {
-    const cookies = new Cookies()
-    const sessionToken = cookies.get('authToken')
+    const cookies = new Cookies();
+    const sessionToken = cookies.get('authToken');
     if (sessionToken !== null && sessionToken !== undefined) {
-      return 'Bearer ' + sessionToken
+      return 'Bearer ' + sessionToken;
     } else {
-      return ""
+      return '';
     }
   } catch (error) {
-    return ""
+    return '';
   }
-}
+};
 
 const parseData = async (response: any, headers: Headers, debug = false) => {
   if (debug) {
     console.warn('Trying to parse data');
   }
-  const responseBlob = response.clone()
+  const responseBlob = response.clone();
   const contentType = await headers.get('Content-Type');
-  if(contentType){
+  if (contentType){
     if (contentType.includes('json')) {
       const rawData = await response.json();
       return (rawData);
     } if (binaryContentTypesToBeSaved.find((currType) => contentType.includes(currType))) {
-        const blob = await responseBlob.blob()
-        const data = URL.createObjectURL(blob)
-        return data
+        const blob = await responseBlob.blob();
+        const data = URL.createObjectURL(blob);
+        return data;
     }
   }
   return response.text();
-}
+};
 
 const fetchMethod = async (url: string, initialFetchConfig: DataObject, timeout = 5000, debug = false) => {
-  const controller = new AbortController()
-  const signal = controller.signal
+  const controller = new AbortController();
+  const signal = controller.signal;
   const fetchConfig = { ...initialFetchConfig, signal };
 
   const abortTimeout = setTimeout(() => {
     controller.abort();
   }, timeout);
 
-  debug && console.warn(fetchConfig)
+  debug && console.warn(fetchConfig);
 
   let response;
   try {
@@ -65,12 +65,12 @@ const fetchMethod = async (url: string, initialFetchConfig: DataObject, timeout 
     };
 
     clearTimeout(abortTimeout);
-    debug && console.warn(responseObject)
+    debug && console.warn(responseObject);
     return responseObject;
   } catch (error) {
-    return {status: 503, statusText: "Service Unavailable"}
+    return {status: 503, statusText: 'Service Unavailable'};
   }
-}
+};
 
 /**
      * Send an HTTP Request
@@ -88,24 +88,35 @@ const fetchMethod = async (url: string, initialFetchConfig: DataObject, timeout 
   */
 const SendHTTPrequest = async (requestConfig: RequestConfig) => {
   // Headers settings
-  const url = API_ENDPOINT + requestConfig.endpoint
+  const url = API_ENDPOINT + requestConfig.endpoint;
 
-  const allHeaders = {
+  let allHeaders = {
     ...requestConfig.headers,
-    'Authorization': await getBearerToken()
+    Authorization: await getBearerToken()
+  };
+
+  if(!allHeaders['Content-type']){
+    allHeaders['Content-type'] = 'application/json';
   }
 
-  const fetchConfig: any = {}
-  fetchConfig.headers = allHeaders
-  fetchConfig.method = requestConfig.method
-  fetchConfig.body = requestConfig.data
+
+  const fetchConfig: any = {};
+  fetchConfig.headers = allHeaders;
+  fetchConfig.method = requestConfig.method;
 
   try {
-    const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout)
-    return responseObject
+    const stringifiedJSON = JSON.stringify(requestConfig.data)
+    fetchConfig.body = stringifiedJSON;
   } catch (error) {
-    return error
+    fetchConfig.body = requestConfig.data;
   }
-}
 
-export  { SendHTTPrequest, RequestConfig }
+  try {
+    const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout);
+    return responseObject;
+  } catch (error) {
+    return error;
+  }
+};
+
+export  { SendHTTPrequest, RequestConfig };

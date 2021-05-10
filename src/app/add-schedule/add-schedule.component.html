@@ -1,0 +1,68 @@
+<div class="modal" [ngClass]="{'is-active': displayModal}">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <form [formGroup]="scheduleForm">
+      <header class="modal-card-head has-background-grey-darker">
+        <p class="modal-card-title has-text-white-ter">Add schedule</p>
+        <button (click)="displayModal = !displayModal" class="delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body has-background-grey-dark">
+        <div class="steps">
+          <div *ngFor="let step of steps; let index=index"
+            [ngClass]="{'is-completed': currentStep>index, 'is-active': index==currentStep || currentStep>index}"
+            class="step-item">
+            <div (click)="currentStep = index" class="step-marker"><i class="{{step.icon}}"></i></div>
+            <div class="step-details">
+              <p class="step-title" [ngClass]="{'has-text-primary': index==currentStep}">{{step.title}}</p>
+            </div>
+          </div>
+          <div class="steps-content">
+            <!-- Select script -->
+            <div class="step-content has-text-centered is-active">
+              <div *ngIf="currentStep === 0">
+                <div class="field">
+                  <label class="label has-text-white-ter">Select script which will be executed: </label>
+                  <div class="select is-info">
+                    <select formControlName="scriptName" required>
+                      <option *ngFor="let script of selectedProject.scripts | keyvalue" [ngValue]="script.key">
+                        {{script.key}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Then select time with until option -->
+              <div *ngIf="currentStep === 1">
+                <div class="field" formGroupName="every">
+                  <input class="input" type="number" min=0 max=60 placeholder="Run script every X hour/minute" name="value" formControlName="value" required>
+                  <div class="select is-info">
+                    <select formControlName="timeType" required>
+                      <option *ngFor="let timeValue of timeValuesArray" [ngValue]="timeValue">
+                        {{ timeValue }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <!-- Confirm new schedule -->
+              <div *ngIf="currentStep === 2">
+                <h1 class="is-4">This is summary of new schedule</h1>
+                <button (click)="onSubmit()" class="button">Add Schedule</button>
+              </div>
+            </div>
+          </div>
+          <div class="steps-actions">
+            <div class="steps-action">
+              <button (click)="currentStep = currentStep-1" data-nav="previous" [disabled]="currentStep === 0"
+                class="button is-light">Previous</button>
+            </div>
+            <div class="steps-action">
+              <button (click)="currentStep = currentStep+1" data-nav="next" [disabled]="currentStep === 2"
+                class="button is-light">Next</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </form>
+  </div>
+</div>

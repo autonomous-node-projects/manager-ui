@@ -27,11 +27,11 @@
           </ng-container>
         </ng-container>
         <ng-template #selectedProjectTemplate>
-          <app-project-details [selectedProject]=selectedProject></app-project-details>
+          <app-project-details [selectedProject]="selectedProject"></app-project-details>
         </ng-template>
       </div>
     </div>
   </div>
 </div>
 
-<app-upload [displayModal]="displayUploadModal" (getProjectsArray)="getProjectsArray()"></app-upload>
+<app-upload [displayModal]="displayUploadModal"></app-upload>

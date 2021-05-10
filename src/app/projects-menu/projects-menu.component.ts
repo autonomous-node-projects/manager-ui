@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Project } from '../../common/interfaces/project.interface';
 
 @Component({
@@ -8,23 +8,21 @@ import { Project } from '../../common/interfaces/project.interface';
 })
 
 
-export class ProjectsMenuComponent implements OnInit {
+export class ProjectsMenuComponent {
 
   constructor() { }
 
   @Input() projectsArray: Array<Project> = [];
-  @Input() errorLoadingProjectsArray: boolean = false;
-  @Output("selectProjectId") public selectProjectId = new EventEmitter<string>();
+  @Input() errorLoadingProjectsArray = false;
+  @Output() public selectProjectId = new EventEmitter<string>();
 
-  selectedId: string = ''
+  selectedId = '';
 
 
-  selectProjectIdlocal (id: string) {
-    this.selectedId = id
-    this.selectProjectId.emit(id)
+  selectProjectIdlocal(id: string) {
+    this.selectedId = id;
+    this.selectProjectId.emit(id);
   }
 
-  ngOnInit(): void {
-  }
 
 }

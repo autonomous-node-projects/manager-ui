@@ -4,7 +4,7 @@
   </p>
   <span *ngIf="!projectsArray.length">
     <ng-container *ngIf="errorLoadingProjectsArray">
-      <p>No data found</p>
+      <p class="has-text-warning">No data found</p>
     </ng-container>
   </span>
   <ul *ngFor="let project of projectsArray" class="menu-list">

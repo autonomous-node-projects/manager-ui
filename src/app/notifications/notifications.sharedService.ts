@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { NotificationParameters } from './notifications.interface'
+import { NotificationParameters } from './notifications.interface';
 
 @Injectable({
   providedIn: 'root'
