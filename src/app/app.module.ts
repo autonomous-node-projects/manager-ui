@@ -10,6 +10,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { ProjectsMenuComponent } from './projects-menu/projects-menu.component';
 import { AddScheduleComponent } from './add-schedule/add-schedule.component';
+import { PopUpDialogComponent } from './pop-up-dialog/pop-up-dialog.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AddScheduleComponent } from './add-schedule/add-schedule.component';
     NotificationsComponent,
     ProjectDetailsComponent,
     ProjectsMenuComponent,
-    AddScheduleComponent
+    AddScheduleComponent,
+    PopUpDialogComponent
   ],
   imports: [
     BrowserModule,

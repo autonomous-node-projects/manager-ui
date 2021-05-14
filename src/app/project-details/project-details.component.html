@@ -35,8 +35,13 @@
     </tbody>
   </table>
 </ng-template>
-<app-add-schedule [selectedProject]="selectedProject"></app-add-schedule>
+<app-add-schedule [selectedProject]="selectedProject" (updateSchedules)="updateSchedules($event)"></app-add-schedule>
 <h2 class="is-size-4 mt-5">Output Data</h2>
 <button class="button is-dark has-background-black-ter has-text-primary mt-3" (click)="downloadData()">
   Download Output data
 </button>
+<h2 class="is-size-4 mt-5">Project settings</h2>
+<button class="button is-dark has-background-black-ter has-text-danger mt-3" (click)="deleteProject()">
+  Delete project
+</button>
+<app-pop-up-dialog [displayPopUp]="displayPopUp" [popUpOptions]="popUpOptions" (selectedAction)="popUpAction($event)"></app-pop-up-dialog>

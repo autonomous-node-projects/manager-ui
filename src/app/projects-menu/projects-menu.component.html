@@ -2,12 +2,12 @@
   <p class="menu-label has-text-grey-lighter">
     Projects
   </p>
-  <span *ngIf="!projectsArray.length">
+  <span *ngIf="!projectsService.projects.length">
     <ng-container *ngIf="errorLoadingProjectsArray">
       <p class="has-text-warning">No data found</p>
     </ng-container>
   </span>
-  <ul *ngFor="let project of projectsArray" class="menu-list">
+  <ul *ngFor="let project of projectsService.projects" class="menu-list">
     <li class="project"><a class="mt-2 has-text-white-ter has-background-dark"  [ngClass]="{'has-background-grey-dark': project._id===selectedId}" (click)="selectProjectIdlocal(project._id)">{{ project.name }}</a></li>
   </ul>
 </aside>

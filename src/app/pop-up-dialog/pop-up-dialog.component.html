@@ -1,0 +1,13 @@
+<div class="modal" [ngClass]="{'is-active': displayPopUp}">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head has-background-grey-dark">
+      <p>{{popUpOptions.text}}</p>
+    </header>
+    <footer class="modal-card-foot has-background-grey-darker">
+      <button class="button has-text-success"
+        [ngClass]="{'has-text-danger': popUpOptions.critical}" (click)="runAction(true)">{{popUpOptions.actions.ok}}</button>
+      <button class="button" (click)="runAction(false)">{{popUpOptions.actions.cancel}}</button>
+    </footer>
+  </div>
+</div>

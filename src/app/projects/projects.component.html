@@ -1,7 +1,7 @@
 <div class="columns">
   <!-- LEFT -->
   <div class="column is-2-desktop">
-    <app-projects-menu [projectsArray]="projectsArray" [errorLoadingProjectsArray]="errorLoadingProjectsArray" (selectProjectId)="selectProjectId($event)" class="is-valign">
+    <app-projects-menu [errorLoadingProjectsArray]="errorLoadingProjectsArray" (selectProjectId)="selectProjectId($event)" class="is-valign">
     </app-projects-menu>
   </div>
 
@@ -20,7 +20,7 @@
     <div class="columns">
       <div class="column is-12-desktop">
         <ng-container *ngIf="!selectedProject; else selectedProjectTemplate">
-          <ng-container *ngIf="projectsArray.length > 0">
+          <ng-container *ngIf="projectsService.projects.length > 0">
             <h2 class="has-text-info has-text-centered">Select project and details will appear here </h2>
           </ng-container>
         </ng-container>

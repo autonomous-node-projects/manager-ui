@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
-import { SendHTTPrequest } from 'src/common/api/wrapper';
+import { RequestConfig, SendHTTPrequest } from 'src/common/api/wrapper';
 import { NotificationsSharedService } from '../notifications/notifications.sharedService';
+import { ProjectsService } from '../projects/projects.service';
 import { ProjectsSharedService } from '../projects/projects.sharedService';
 
 @Component({
@@ -17,7 +18,8 @@ export class UploadComponent {
   constructor(
     public fb: FormBuilder,
     private notifications: NotificationsSharedService,
-    private getProjects: ProjectsSharedService
+    private projectsService: ProjectsService,
+    private projectsSharedService: ProjectsSharedService
   ) {
     this.uploadForm = this.fb.group({
       archive: new FormControl(null, Validators.required),
@@ -54,34 +56,40 @@ export class UploadComponent {
 
   onSubmit = async () => {
     this.submitted = true;
-    const formData: any = new FormData();
+    var formDataObject: any = new FormData();
 
     Object.keys(this.uploadForm.value).forEach(element => {
       const field = this.uploadForm.get(String(element));
       if (field){
-        formData.append(String(element), field.value);
+          formDataObject.append(String(element), field.value)
       }
     });
 
-    const response = await SendHTTPrequest({
+    for (var [key, value] of formDataObject.entries()) {
+      console.log(key, value);
+    }
+
+    const requestConfig: RequestConfig = {
       endpoint: 'projects',
       method: 'POST',
-      data: formData
-    });
+      data: formDataObject
+    }
 
+    const response = await SendHTTPrequest(requestConfig);
+    console.log(response.data)
     if (response.status >= 200 && response.status < 300){
         this.notifications.sendOpenNotificationEvent({
           message: `${response.statusText} - ${response.data.details}: ${response.data.data}`,
-           type: 'SUCCESS'
+          type: 'SUCCESS'
         });
-        this.getProjects.sendPullProjectsEvent();
+        this.projectsService.add(response.data.data)
+        this.projectsSharedService.sendSelectProjectEvent(response.data.data._id)
       }
-    if (response.status >= 300 && response.status < 400){
+    if (response.status >= 300 && response.status < 500){
         this.notifications.sendOpenNotificationEvent({
           message: `${response.statusText} - ${response.data.details}`,
           type: 'ERROR'
         });
-        this.getProjects.sendPullProjectsEvent();
       }
     if (response.status >= 500){
         this.notifications.sendOpenNotificationEvent({

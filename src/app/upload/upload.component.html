@@ -15,7 +15,7 @@
         </p>
         <div class="field file">
           <label class="file-label">
-            <input class="file-input is-rounded" type="file" name="archive" (change)="uploadFile($event)" required>
+            <input class="file-input is-rounded" type="file" formControlName="archive" name="archive" (change)="uploadFile($event)" required>
             <span class="file-cta">
               <span class="file-label">
                 <ng-container *ngIf="filename.length > 0; else elseTemplate">
@@ -31,7 +31,7 @@
         <div class="field">
           <label class="label has-text-white-ter">Data output directory</label>
           <div class="control">
-            <input class="input" type="text" placeholder="data/output" name="dataDirectory">
+            <input class="input" type="text" placeholder="data/output" formControlName="dataDirectory" name="dataDirectory">
           </div>
         </div>
       </section>
