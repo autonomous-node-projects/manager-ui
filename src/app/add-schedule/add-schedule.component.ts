@@ -3,21 +3,36 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { RequestConfig, SendHTTPrequest } from 'src/common/api/wrapper';
 import { NotificationsSharedService } from '../notifications/notifications.sharedService';
-import { timeValuesArray } from '../../common/interfaces/schedule.interface'
-import { ProjectsSharedService } from '../projects/projects.sharedService';
+import { Schedule, timeValuesArray } from '../../common/interfaces/schedule.interface'
 
 @Component({
   selector: 'app-add-schedule',
   templateUrl: './add-schedule.component.html',
   styleUrls: ['./add-schedule.component.scss']
 })
+
 export class AddScheduleComponent {
   scheduleForm: FormGroup;
+  timeValuesArray = timeValuesArray
+  currentStep: number = 0;
+  submitted = false;
+  steps: Array<any> = [
+    {
+      title: "Script",
+      icon: "ph-app-window"
+    },{
+      title: "Time",
+      icon: "ph-hourglass"
+    },{
+      title: "Confirm",
+      icon: "ph-checks"
+    }
+  ]
+
 
   constructor(
     public fb: FormBuilder,
     private notifications: NotificationsSharedService,
-    private getProjects: ProjectsSharedService
   ) {
     this.scheduleForm = this.fb.group({
       scriptName: new FormControl('',Validators.required),
@@ -31,25 +46,7 @@ export class AddScheduleComponent {
 
   @Input() displayModal: boolean = false;
   @Input() selectedProject: any;
-  @Output() getProjectsArray = new EventEmitter();
-
-  timeValuesArray = timeValuesArray
-  currentStep: number = 0;
-
-  steps: Array<any> = [
-  {
-    title: "Script",
-    icon: "ph-app-window"
-  },{
-    title: "Time",
-    icon: "ph-hourglass"
-  },{
-    title: "Confirm",
-    icon: "ph-checks"
-  }
-]
-
-  submitted = false;
+  @Output() updateSchedules = new EventEmitter();
 
   onSubmit = async () => {
     let schedule: any = {}
@@ -62,20 +59,22 @@ export class AddScheduleComponent {
       }
     });
 
-    console.log(schedule)
     const requestConfig: RequestConfig = {
       endpoint: `schedules/?id=${this.selectedProject._id}`,
       method: "POST",
-      data: [schedule]
+      data: [schedule],
+      headers: {'Content-Type': 'application/json'}
     }
-    console.log(requestConfig)
+
     const response = await SendHTTPrequest(requestConfig)
     if (response.status >= 200 && response.status < 300){
+      this.scheduleForm.reset()
+      this.currentStep = 0;
       this.notifications.sendOpenNotificationEvent({
         message: `${response.statusText} - ${response.data.details}`,
          type: 'SUCCESS'
       });
-      this.getProjects.sendPullProjectsEvent()
+      this.updateSchedules.emit(response.data.data[response.data.data.length-1])
       this.displayModal = false;
     } else {
       this.notifications.sendOpenNotificationEvent({

@@ -95,19 +95,14 @@ const SendHTTPrequest = async (requestConfig: RequestConfig) => {
     Authorization: await getBearerToken()
   };
 
-  if(!allHeaders['Content-type']){
-    allHeaders['Content-type'] = 'application/json';
-  }
-
-
   const fetchConfig: any = {};
   fetchConfig.headers = allHeaders;
   fetchConfig.method = requestConfig.method;
 
-  try {
+  if(allHeaders['Content-Type'] === 'application/json'){
     const stringifiedJSON = JSON.stringify(requestConfig.data)
     fetchConfig.body = stringifiedJSON;
-  } catch (error) {
+  } else {
     fetchConfig.body = requestConfig.data;
   }
 

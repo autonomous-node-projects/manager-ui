@@ -1,9 +1,11 @@
-import { Component, Input, Output } from '@angular/core';
-import { async } from '@angular/core/testing';
+import { Component, Input } from '@angular/core';
 import { SendHTTPrequest } from 'src/common/api/wrapper';
 import { RequestConfig } from 'src/common/interfaces/request.interface';
 import { Schedule } from 'src/common/interfaces/schedule.interface';
 import { NotificationsSharedService } from '../notifications/notifications.sharedService';
+import { popUpDialog } from '../pop-up-dialog/pop-up-dialog.interface';
+import { ProjectsService } from '../projects/projects.service';
+import { ProjectsSharedService } from '../projects/projects.sharedService';
 
 
 @Component({
@@ -11,13 +13,17 @@ import { NotificationsSharedService } from '../notifications/notifications.share
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.scss']
 })
+
 export class ProjectDetailsComponent {
-
-  constructor(
-    private notifications: NotificationsSharedService,
-  ) { }
-
-  @Input() selectedProject: any;
+  displayPopUp: boolean = false;
+  popUpOptions: popUpDialog = {
+    text: `Are you sure about deleting current project?`,
+    critical: true,
+    actions: {
+      ok: "Confirm delete",
+      cancel: "Cancel"
+    }
+  }
 
   tableHeaders = [
     {title: "Position", shortcut: "Pos."},
@@ -27,13 +33,21 @@ export class ProjectDetailsComponent {
     {title: "Actions", shortcut: "Actions"},
   ]
 
+  constructor(
+    private notifications: NotificationsSharedService,
+    private projectsService: ProjectsService,
+    private projectsSharedService: ProjectsSharedService
+  ) { }
+
+  @Input() selectedProject: any;
+
   SaveFile = (href: string, filename: string) => {
     const a = document.createElement('a');
     a.href = href;
     a.download = filename;
     a.click();
     URL.revokeObjectURL(href);
-}
+  }
 
   downloadData = async () => {
     const requestConfig: RequestConfig = {
@@ -52,9 +66,13 @@ export class ProjectDetailsComponent {
     }
   }
 
+  updateSchedules = (schedule: object) => {
+    this.selectedProject.schedules.push(schedule)
+  }
+
   deleteSchedule = async(ScheduleId: string) => {
     const requestConfig: RequestConfig = {
-      endpoint: `schedules/?id=${ScheduleId}`,
+      endpoint: `schedules?id=${ScheduleId}`,
       method: "DELETE"
     }
     const response = await SendHTTPrequest(requestConfig);
@@ -68,4 +86,27 @@ export class ProjectDetailsComponent {
     }
   }
 
+  deleteProject() {
+    this.displayPopUp = true
+  }
+
+  popUpAction = async(result: boolean) =>{
+    this.displayPopUp = false;
+    if(result){
+      const requestConfig: RequestConfig = {
+        endpoint: `projects?id=${this.selectedProject._id}`,
+        method: "DELETE"
+      }
+      const response = await SendHTTPrequest(requestConfig);
+      if(response.status === 200){
+        this.notifications.sendOpenNotificationEvent({
+          message: `${response.status}: ${response.statusText} - Project with ID ${this.selectedProject._id} correctly deleted`,
+          type: "SUCCESS",
+          timeout: 2000
+        })
+        this.projectsService.remove(this.selectedProject._id)
+        this.projectsSharedService.sendSelectProjectEvent(null)
+      }
+    }
+  }
 }

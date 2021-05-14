@@ -8,11 +8,11 @@ import { Observable, Subject } from 'rxjs';
 export class ProjectsSharedService {
   private subject = new Subject<any>();
 
-  sendPullProjectsEvent() {
-    this.subject.next();
+  sendSelectProjectEvent(projectId: string | null) {
+    this.subject.next(projectId);
   }
 
-  getPullProjectsEvent(): Observable<any> {
+  getSelectProjectEvent(): Observable<any> {
     return this.subject.asObservable();
   }
 }

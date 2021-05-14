@@ -3,7 +3,9 @@ import { SendHTTPrequest, RequestConfig} from '../../common/api/wrapper';
 import { Project } from '../../common/interfaces/project.interface';
 import { NotificationsSharedService } from '../notifications/notifications.sharedService';
 import { ProjectsSharedService } from './projects.sharedService';
+import { ProjectsService } from './projects.service';
 import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
@@ -11,27 +13,42 @@ import { Subscription } from 'rxjs';
 })
 
 export class ProjectsComponent implements OnInit {
-  clickEventsubscription: Subscription;
+  selectProjectEventSubscription: Subscription;
   errorLoadingProjectsArray = false;
-  projectsArray: Array<Project> = [];
-  selectedProject?: Project;
+  selectedProject?: Project | null;
 
   constructor(
     private notifications: NotificationsSharedService,
-    private getProjects: ProjectsSharedService
-  ) { this.clickEventsubscription = this.getProjects.getPullProjectsEvent().subscribe(() => {
-    this.getProjectsArray();
-});}
-
-  selectProjectId(id: string){
-    this.selectedProject = this.projectsArray.find((project) => project._id === id);
+    private projectsSharedService: ProjectsSharedService,
+    public projectsService: ProjectsService,
+  ) {
+    this.selectProjectEventSubscription = this.projectsSharedService.getSelectProjectEvent().subscribe((projectId) => {
+      this.selectProjectId(projectId);
+    });
   }
 
+  selectProjectId = async(projectId: string | null) =>{
+    if(projectId){
+      const requestConfig: RequestConfig = {
+        method: 'GET',
+        endpoint: `projects?id=${projectId}`,
+        headers: {'Content-Type': 'application/json'}
+      };
+      const result = await SendHTTPrequest(requestConfig)
+      if(result.status === 200){
+        const project: Project = result.data.data
+        this.selectedProject = project
+      }
+    } else {
+      this.selectedProject = null
+    }
+  }
 
   getProjectsArray = async () => {
     const requestConfig: RequestConfig = {
       method: 'GET',
-      endpoint: 'projects/'
+      endpoint: 'projects?names_only=true',
+      headers: {'Content-Type': 'application/json'}
     };
     const response = await SendHTTPrequest(requestConfig);
 
@@ -39,12 +56,15 @@ export class ProjectsComponent implements OnInit {
       // Smooth add to array
       response.data.data.forEach((element: Project, index: number) => {
         // Check if object is already in array
-        if (!this.projectsArray.find(inArrElement => inArrElement._id === element._id)){
+        const projectIndex = this.projectsService.projects.findIndex(inArrElement => inArrElement._id === element._id)
+
+        // If not -> add it
+        if (projectIndex === -1){
           // Add with delay for smooth transition
           setTimeout(() => {
-            this.projectsArray.push(element);
+            this.projectsService.add(element)
             }, 250 * index);
-        }
+          }
       });
     } else {
       this.errorLoadingProjectsArray = true;
@@ -58,12 +78,13 @@ export class ProjectsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.getProjectsArray();
-    }, 700);
+    this.getProjectsArray();
 
     setInterval(() => {
       this.getProjectsArray();
-    }, 1000 * 60);
+      if(this.selectedProject){
+        this.selectProjectId(this.selectedProject._id)
+      }
+    }, 1000 * 60 * 5);
   }
 }
