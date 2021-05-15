@@ -1,7 +1,8 @@
+import { environment } from 'src/environments/environment';
 import Cookies from 'universal-cookie';
 import { RequestConfig, DataObject } from '../interfaces/request.interface';
 
-const API_ENDPOINT = 'http://localhost:3000/';
+const API_ENDPOINT = environment.apiIP;
 
 const binaryContentTypesToBeSaved = [
   'image/png', 'image/jpeg', 'image/jpg', 'application/x-tar'
