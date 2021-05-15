@@ -52,7 +52,12 @@ export class ProjectsComponent implements OnInit {
     };
     const response = await SendHTTPrequest(requestConfig);
 
+    // let tryToGetProjects = null;
+
     if (response.status === 200){
+      // if(tryToGetProjects){
+      //   clearInterval(tryToGetProjects)
+      // }
       // Smooth add to array
       response.data.data.forEach((element: Project, index: number) => {
         // Check if object is already in array
@@ -74,17 +79,18 @@ export class ProjectsComponent implements OnInit {
            type: 'ERROR'
         });
       }
+      // if(!tryToGetProjects){
+      //   tryToGetProjects = setInterval(() => {
+      //     this.getProjectsArray();
+      //     if(this.selectedProject){
+      //       this.selectProjectId(this.selectedProject._id)
+      //     }
+      //   }, 1000 * 5);
+      // }
     }
   }
 
   ngOnInit(): void {
     this.getProjectsArray();
-
-    setInterval(() => {
-      this.getProjectsArray();
-      if(this.selectedProject){
-        this.selectProjectId(this.selectedProject._id)
-      }
-    }, 1000 * 60 * 5);
   }
 }
