@@ -5,6 +5,7 @@ import { NotificationsSharedService } from '../notifications/notifications.share
 import { ProjectsSharedService } from './projects.sharedService';
 import { ProjectsService } from './projects.service';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
@@ -18,6 +19,7 @@ export class ProjectsComponent implements OnInit {
   selectedProject?: Project | null;
 
   constructor(
+    private route: ActivatedRoute,
     private notifications: NotificationsSharedService,
     private projectsSharedService: ProjectsSharedService,
     public projectsService: ProjectsService,
@@ -92,5 +94,11 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProjectsArray();
+
+    this.route.queryParams
+      .subscribe(params => {
+        this.selectProjectId(params.id)
+      }
+    );
   }
 }
