@@ -3,18 +3,18 @@ FROM node:14.16.0-alpine as builder
 MAINTAINER Daniel Goliszewski "taafeenn@gmail.com"
 
 # Set working directory.
-RUN mkdir /app
-WORKDIR /app
+RUN mkdir /anpm-ui
+WORKDIR /anpm-ui
 
 # Copy app dependencies.
-COPY package*.json /app/
+COPY package*.json /anpm-ui/
 
 # Install app dependencies.
 RUN npm install @angular-devkit/build-angular
 RUN npm install
 
 # Copy app files.
-COPY . /app
+COPY . /anpm-ui
 
 # Build app
 RUN npm run build -- --output-path=./dist/out
@@ -28,7 +28,7 @@ MAINTAINER Daniel Goliszewski "taafeenn@gmail.com"
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy output directory from builder to nginx image.
-COPY --from=builder /app/dist/out /usr/share/nginx/html
+COPY --from=builder /anpm-ui/dist/out /usr/share/nginx/html
 
 # Copy nginx configuration file.
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
