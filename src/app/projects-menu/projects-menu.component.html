@@ -8,6 +8,15 @@
     </ng-container>
   </span>
   <ul *ngFor="let project of projectsService.projects" class="menu-list">
-    <li class="project"><a class="mt-2 has-text-white-ter has-background-dark"  [ngClass]="{'has-background-grey-dark': project._id===selectedId}" (click)="selectProjectIdlocal(project._id)">{{ project.name }}</a></li>
+    <li class="project">
+      <a
+        class="mt-2 has-text-white-ter has-background-dark"
+        [ngClass]="{'has-background-grey-dark': project._id===selectedId}"
+        (click)="selectProjectIdlocal(project._id)"
+        [routerLink]="['/projects']" [queryParams]="{id: project._id}"
+        >
+      {{ project.name }}
+      </a>
+    </li>
   </ul>
 </aside>

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { RequestConfig, SendHTTPrequest } from 'src/common/api/wrapper';
 import { NotificationsSharedService } from '../notifications/notifications.sharedService';
-import { Schedule, timeValuesArray } from '../../common/interfaces/schedule.interface'
+import { timeValuesArray } from '../../common/interfaces/schedule.interface'
 
 @Component({
   selector: 'app-add-schedule',
@@ -44,9 +44,15 @@ export class AddScheduleComponent {
     });
   }
 
-  @Input() displayModal: boolean = false;
+  displayModal: boolean = false;
   @Input() selectedProject: any;
   @Output() updateSchedules = new EventEmitter();
+
+  closeModal(){
+    this.displayModal = false
+    this.currentStep = 0
+    this.scheduleForm.reset()
+  }
 
   onSubmit = async () => {
     let schedule: any = {}

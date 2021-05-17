@@ -18,22 +18,24 @@
   <p class="has-text-warning">No schedules</p>
 </ng-container>
 <ng-template #hasSchedules>
-  <table class="table has-background-grey-darker has-text-light">
-    <thead>
-      <tr>
-        <th *ngFor="let header of tableHeaders" class="has-text-light"><abbr title="{{header.title}}">{{header.shortcut}}</abbr></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let schedule of selectedProject.schedules; let i=index;">
-        <th class="has-text-light">{{i}}</th>
-        <td>{{schedule.scriptName}}</td>
-        <td>{{schedule._id}}</td>
-        <td>Script runs every: {{schedule.every.value}} {{schedule.every.timeType}}</td>
-        <td><button class="button is-dark has-background-black-ter has-text-danger" (click)="deleteSchedule(schedule._id)">Delete</button></td>
-      </tr>
-    </tbody>
-  </table>
+  <div style="overflow-x: auto;">
+    <table class="table has-background-grey-darker has-text-light">
+      <thead>
+        <tr>
+          <th *ngFor="let header of tableHeaders" class="has-text-light"><abbr title="{{header.title}}">{{header.shortcut}}</abbr></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let schedule of selectedProject.schedules; let i=index;">
+          <th class="has-text-light">{{i}}</th>
+          <td>{{schedule.scriptName}}</td>
+          <td>{{schedule._id}}</td>
+          <td>Script runs every: {{schedule.every.value}} {{schedule.every.timeType}}</td>
+          <td><button class="button is-dark has-background-black-ter has-text-danger" (click)="deleteSchedule(schedule._id)">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </ng-template>
 <app-add-schedule [selectedProject]="selectedProject" (updateSchedules)="updateSchedules($event)"></app-add-schedule>
 <h2 class="is-size-4 mt-5">Output Data</h2>

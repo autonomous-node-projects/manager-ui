@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { RequestConfig, SendHTTPrequest } from 'src/common/api/wrapper';
@@ -27,11 +27,15 @@ export class UploadComponent {
     });
   }
 
-  @Input() displayModal = false;
-
+  displayModal = false;
   filename = '';
   submitted = false;
 
+  closeModal(){
+    this.displayModal = false;
+    this.filename = '';
+    this.uploadForm.reset();
+  }
 
   uploadFile(event: any) {
     if (event.target !== null){
