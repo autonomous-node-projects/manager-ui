@@ -97,6 +97,7 @@ export class ProjectsComponent implements OnInit {
 
     this.route.queryParams
       .subscribe(params => {
+        this.projectsSharedService.sendSelectProjectEvent(params.id)
         this.selectProjectId(params.id)
       }
     );

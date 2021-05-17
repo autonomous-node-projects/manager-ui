@@ -7,7 +7,7 @@
     <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
       <header class="modal-card-head has-background-grey-darker">
         <p class="modal-card-title has-text-white-ter">Add node project</p>
-        <button (click)="displayModal = !displayModal" class="delete" aria-label="close"></button>
+        <a (click)="closeModal()" class="delete" aria-label="close"></a>
       </header>
       <section class="modal-card-body has-background-grey-dark">
         <p *ngIf="uploadForm.invalid" class="help is-danger">
@@ -36,8 +36,8 @@
         </div>
       </section>
       <footer class="modal-card-foot has-background-grey-darker">
-        <button type="submit" [disabled]="!uploadForm.valid" class="button is-success" [ngClass]="{'is-loading': submitted}">Add</button>
-        <button (click)="displayModal = !displayModal" class="button">Cancel</button>
+        <input type="submit" [disabled]="!uploadForm.valid" class="button is-success" [ngClass]="{'is-loading': submitted}" value="Add">
+        <a (click)="closeModal()" class="button">Cancel</a>
       </footer>
     </form>
   </div>
