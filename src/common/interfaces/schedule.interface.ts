@@ -18,4 +18,5 @@ export interface Schedule {
     timeType: timeValues
   };
  exitAfter?: number;
+ nextRun?: any;
 }

@@ -5,6 +5,6 @@ export interface Project {
   name: string;
   dataDirectory?: string;
   scripts?: object;
-  schedules?: [Schedule];
+  schedules?: Schedule[];
   __v?: number;
 }

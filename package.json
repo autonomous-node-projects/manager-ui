@@ -1,9 +1,9 @@
 {
   "name": "manager-ui",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -c dev",
+    "dev": "ng serve -c dev",
     "build": "ng build -c production",
     "test": "ng test",
     "lint": "ng lint",

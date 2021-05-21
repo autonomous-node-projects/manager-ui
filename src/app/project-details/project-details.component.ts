@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { SendHTTPrequest } from 'src/common/api/wrapper';
 import { RequestConfig } from 'src/common/interfaces/request.interface';
 import { Schedule } from 'src/common/interfaces/schedule.interface';
@@ -11,7 +12,8 @@ import { ProjectsSharedService } from '../projects/projects.sharedService';
 @Component({
   selector: 'app-project-details',
   templateUrl: './project-details.component.html',
-  styleUrls: ['./project-details.component.scss']
+  styleUrls: ['./project-details.component.scss'],
+  providers: [DatePipe],
 })
 
 export class ProjectDetailsComponent {
@@ -24,20 +26,21 @@ export class ProjectDetailsComponent {
       cancel: "Cancel"
     }
   }
-
   tableHeaders = [
     {title: "Position", shortcut: "Pos."},
     {title: "Script Name", shortcut: "Script"},
     {title: "ID of schedule", shortcut: "ID"},
     {title: "Schedule time", shortcut: "Schedule"},
+    {title: "Date of next scheduled run (locale date)", shortcut: "Next run"},
     {title: "Actions", shortcut: "Actions"},
   ]
 
   constructor(
     private notifications: NotificationsSharedService,
     private projectsService: ProjectsService,
-    private projectsSharedService: ProjectsSharedService
-  ) { }
+    private projectsSharedService: ProjectsSharedService,
+  ) {
+   }
 
   @Input() selectedProject: any;
 

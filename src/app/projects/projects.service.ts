@@ -9,6 +9,15 @@ export class ProjectsService {
   projects: Project[] = [];
 
   add(project: Project) {
+    if(project.schedules){
+        project.schedules = project.schedules.map((schedule)=>{
+        if(schedule.nextRun){
+          const localeNextRun = new Date(schedule.nextRun.toLocaleTimeString);
+          schedule.nextRun = localeNextRun;
+        }
+        return schedule;
+      })
+    }
     this.projects.push(project);
   }
 
