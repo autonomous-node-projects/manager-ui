@@ -11,6 +11,7 @@ import { ProjectDetailsComponent } from './project-details/project-details.compo
 import { ProjectsMenuComponent } from './projects-menu/projects-menu.component';
 import { AddScheduleComponent } from './add-schedule/add-schedule.component';
 import { PopUpDialogComponent } from './pop-up-dialog/pop-up-dialog.component';
+import { AlertsComponent } from './alerts/alerts.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { PopUpDialogComponent } from './pop-up-dialog/pop-up-dialog.component';
     ProjectDetailsComponent,
     ProjectsMenuComponent,
     AddScheduleComponent,
-    PopUpDialogComponent
+    PopUpDialogComponent,
+    AlertsComponent
   ],
   imports: [
     BrowserModule,
