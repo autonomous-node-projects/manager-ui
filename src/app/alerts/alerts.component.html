@@ -1,0 +1,19 @@
+<ng-container *ngIf="alertsService.alerts.length > 0; else elseTemplate">
+  <div *ngFor="let alert of alertsService.alerts">
+    <article class="message alert">
+      <div class="message-header">
+        <p>{{alert.name}} - {{alert.alertCreationDate}}</p>
+        <p>{{alert.projectName}}</p>
+      </div>
+      <div class="message-body">
+        <p>{{alert.content}}</p>
+      </div>
+    </article>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <h2 class="has-text-info has-text-centered">No alerts</h2>
+</ng-template>
+<div class="has-text-centered pt-5 pb-5">
+  <button class="button is-primary" (click)="getMoreAlerts()">Load more alerts</button>
+</div>
