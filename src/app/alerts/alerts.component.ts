@@ -4,6 +4,7 @@ import { SwPush } from '@angular/service-worker';
 import { SendHTTPrequest } from 'src/common/api/wrapper';
 import { Alert } from 'src/common/interfaces/alert.interface';
 import { RequestConfig } from 'src/common/interfaces/request.interface';
+import { environment } from 'src/environments/environment';
 import { AlertsService } from './alerts.service';
 import { sendAlertService } from './send_alert.service';
 
@@ -24,7 +25,7 @@ export class AlertsComponent implements OnInit {
 
   subscribeToNotifications() {
     this.swPush.requestSubscription({
-      serverPublicKey: `${process.env.publicVapidKey}`
+      serverPublicKey: environment.publicVapidKey
     })
     .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
     .catch(err => console.error("Could not subscribe to notifications", err));
