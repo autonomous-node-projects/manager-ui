@@ -1,3 +1,6 @@
+<button class="button is-danger mb-5" (click)="subscribeToNotifications()">
+  Subscribe to alerts with web notifications - require HTTPS installed on server side
+</button>
 <ng-container *ngIf="alertsService.alerts.length > 0; else elseTemplate">
   <div *ngFor="let alert of alertsService.alerts">
     <article class="message alert">

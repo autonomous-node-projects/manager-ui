@@ -1,21 +1,36 @@
 import { Component, OnInit } from '@angular/core';
+import { SwPush } from '@angular/service-worker';
+
 import { SendHTTPrequest } from 'src/common/api/wrapper';
 import { Alert } from 'src/common/interfaces/alert.interface';
 import { RequestConfig } from 'src/common/interfaces/request.interface';
 import { AlertsService } from './alerts.service';
+import { sendAlertService } from './send_alert.service';
 
 @Component({
   selector: 'app-alerts',
   templateUrl: './alerts.component.html',
-  styleUrls: ['./alerts.component.scss']
+  styleUrls: ['./alerts.component.scss'],
+  providers: [sendAlertService]
 })
+
 export class AlertsComponent implements OnInit {
 
-  alertsOffset = 0;
   constructor(
+    private swPush: SwPush,
+    private newsletterService: sendAlertService,
     public alertsService: AlertsService,
   ) { }
 
+  subscribeToNotifications() {
+    this.swPush.requestSubscription({
+      serverPublicKey: `${process.env.publicVapidKey}`
+    })
+    .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
+    .catch(err => console.error("Could not subscribe to notifications", err));
+  }
+
+  alertsOffset = 0;
   getMoreAlerts = async () => {
     const requestConfig: RequestConfig = {
       method: 'GET',
@@ -45,7 +60,6 @@ export class AlertsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMoreAlerts();
-
   }
 
 }

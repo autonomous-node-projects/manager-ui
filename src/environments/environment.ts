@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiIP: 'http://192.168.0.1:3000/'
+  apiIP: 'http://192.168.0.1:3000/',
+  publicVapidKey: "",
 };
 
 /*
