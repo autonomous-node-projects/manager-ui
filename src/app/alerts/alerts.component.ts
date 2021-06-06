@@ -19,7 +19,7 @@ export class AlertsComponent implements OnInit {
 
   constructor(
     private swPush: SwPush,
-    private newsletterService: sendAlertService,
+    private sendAlertService: sendAlertService,
     public alertsService: AlertsService,
   ) { }
 
@@ -27,7 +27,7 @@ export class AlertsComponent implements OnInit {
     this.swPush.requestSubscription({
       serverPublicKey: environment.publicVapidKey
     })
-    .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
+    .then(sub => this.sendAlertService.addPushSubscriber(sub).subscribe())
     .catch(err => console.error("Could not subscribe to notifications", err));
   }
 
@@ -52,7 +52,7 @@ export class AlertsComponent implements OnInit {
           // Add with delay for smooth transition
           setTimeout(() => {
             this.alertsService.add(element)
-            }, 250 * index);
+            }, 180 * index);
           }
       });
       this.alertsOffset += 10;

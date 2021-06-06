@@ -44,6 +44,25 @@ export class ProjectDetailsComponent {
 
   @Input() selectedProject: any;
 
+  runProcessesLocal = async (scriptName: any) => {
+    const requestConfig: RequestConfig = {
+      method: 'POST',
+      endpoint: `processes?id=${this.selectedProject._id}&scriptName=${scriptName}`
+    };
+    const response = await SendHTTPrequest(requestConfig)
+    if(response.status === 201){
+      this.notifications.sendOpenNotificationEvent({
+        message: `${response.status}: ${response.statusText} Spawned process with ${scriptName}`,
+        type: "SUCCESS",
+      })
+    } else {
+      this.notifications.sendOpenNotificationEvent({
+        message: `${response.status}: ${response.statusText} - Couldnt spawn process with ${scriptName} `,
+         type: 'ERROR'
+      });
+    }
+  }
+
   SaveFile = (href: string, filename: string) => {
     const a = document.createElement('a');
     a.href = href;

@@ -1,3 +1,4 @@
+<h2 class="is-size-2">Alerts</h2>
 <div class="mb-5">
 <button class="button is-danger" (click)="subscribeToNotifications()">
   Subscribe to alerts with web push notifications
@@ -7,7 +8,7 @@
 </div>
 <ng-container *ngIf="alertsService.alerts.length > 0; else elseTemplate">
   <div *ngFor="let alert of alertsService.alerts">
-    <article class="message alert">
+    <article class="message pullAnimation">
       <div class="message-header">
         <p>{{alert.name}} - {{alert.alertCreationDate}}</p>
         <p>{{alert.projectName}}</p>

@@ -1,0 +1,25 @@
+<h2 class="is-size-2">Intervals</h2>
+<ng-container *ngIf="IntervalsService.intervals.length > 0; else elseTemplate">
+  <div style="overflow-x: auto;">
+    <table class="table has-background-grey-darker has-text-light">
+      <thead>
+        <tr>
+          <th *ngFor="let header of tableHeaders" class="has-text-light"><abbr title="{{header.title}}">{{header.shortcut}}</abbr></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="pullAnimation" *ngFor="let interval of IntervalsService.intervals; let i=index;">
+          <th class="has-text-light">{{i}}</th>
+          <td>{{interval.scriptName}}</td>
+          <td>{{interval.projectName}}</td>
+          <td>{{interval.id}}</td>
+          <td>Script runs every: {{interval.every.time}} {{interval.every.timeType}}</td>
+          <td><button class="button is-dark has-background-black-ter has-text-danger" (click)="deleteIntervals([interval.id])">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <h2 class="has-text-info has-text-centered">No running intervals</h2>
+</ng-template>

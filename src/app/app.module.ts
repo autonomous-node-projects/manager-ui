@@ -15,6 +15,8 @@ import { AlertsComponent } from './alerts/alerts.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { sendAlertService } from './alerts/send_alert.service';
 import { environment } from 'src/environments/environment';
+import { IntervalsComponent } from './intervals/intervals.component';
+import { ProcessesComponent } from './processes/processes.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { environment } from 'src/environments/environment';
     ProjectsMenuComponent,
     AddScheduleComponent,
     PopUpDialogComponent,
-    AlertsComponent
+    AlertsComponent,
+    IntervalsComponent,
+    ProcessesComponent,
   ],
   imports: [
     BrowserModule,

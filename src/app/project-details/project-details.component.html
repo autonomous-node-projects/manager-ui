@@ -8,7 +8,11 @@
 <ng-template #hasScripts>
   <ul class="has-text-left">
     <li *ngFor="let script of selectedProject.scripts | keyvalue" class="mt-3">
-      <p><span class="has-text-info">{{script.key}}</span>: <code>{{script.value}}</code></p>
+      <p>
+        <span class="has-text-info">{{script.key}}</span>:
+        <code>{{script.value}}</code>
+        <button class="button is-danger is-small ml-3" (click)="runProcessesLocal(script.key)">Run</button>
+      </p>
     </li>
   </ul>
 </ng-template>

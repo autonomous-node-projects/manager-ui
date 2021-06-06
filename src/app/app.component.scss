@@ -1,5 +1,5 @@
 nav {
-  animation: navAnimOpen 0.2s ease-in-out;
+  animation: navAnimOpen 0.4s ease-in-out;
 }
 
 @keyframes navAnimOpen {
@@ -14,7 +14,7 @@ nav {
   }
   100% {
     opacity: 1;
-    max-height: 396px;
+    max-height: 400px;
   }
 }
 

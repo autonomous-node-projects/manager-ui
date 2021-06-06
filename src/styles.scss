@@ -1,3 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/bulma/css/bulma.css';
 @import '../node_modules/bulma-steps/dist/css/bulma-steps.min.css';
+.pullAnimation {
+  animation: animPull .8s ease-in-out;
+}
+
+@keyframes animPull {
+0% {
+  display: none;
+  opacity: 0;
+}
+10%{
+  display: block;
+}
+70% {
+  display: block;
+  opacity: 0.9;
+}
+100% {
+  opacity: 1;
+}
+}

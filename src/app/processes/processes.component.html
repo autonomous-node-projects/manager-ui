@@ -1,0 +1,24 @@
+<h2 class="is-size-2">Processes</h2>
+<ng-container *ngIf="ProcessesService.processes.length > 0; else elseTemplate">
+  <div style="overflow-x: auto;">
+    <table class="table has-background-grey-darker has-text-light">
+      <thead>
+        <tr>
+          <th *ngFor="let header of tableHeaders" class="has-text-light"><abbr title="{{header.title}}">{{header.shortcut}}</abbr></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="pullAnimation" *ngFor="let process of ProcessesService.processes; let i=index;">
+          <th class="has-text-light">{{i}}</th>
+          <td>{{process.scriptName}}</td>
+          <td>{{process.projectName}}</td>
+          <td>{{process.id}}</td>
+          <td><button class="button is-dark has-background-black-ter has-text-danger" (click)="deleteProcesses([process.id])">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <h2 class="has-text-info has-text-centered">No running processes</h2>
+</ng-template>
